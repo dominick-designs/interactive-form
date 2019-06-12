@@ -1,13 +1,18 @@
 //temporarily hide the top area during developement
-$(".container").find("fieldset").eq(0).hide();
-$(".container").find("fieldset").eq(1).hide();
+// $(".container").find("fieldset").eq(0).hide();
+// $(".container").find("fieldset").eq(1).hide();
+// $(".container").find("fieldset").eq(2).hide();
 
+/* section global variables */
+const colorSelectOption = $('select#color');
 const otherJobTitleInput = $('#other-title');
 // ensure `focus` is on NAME (first) input field on page load
 $(document).ready(function () {
     $("#name").focus();
     $(colorSelectOption).hide();
     $(otherJobTitleInput).hide();
+    /* insert text telling user to select T-shirt theme */
+
 });
 //if the value of 'job role' select box is 'OTHER' reveal the 'other job role' input
 $('select#title').on('change', () => {
@@ -17,27 +22,30 @@ $('select#title').on('change', () => {
     }
 })
 
-
 /*********** COLORS SECTION **********/
-// declare color global variables
+//when the color 'design' select Box changes execute this block
+/* study guide suggests to initially hide the 'SELECT THEME' option on page load but it's better to leave this there so user is
+clear that this is the dropdown that is used to select the theme
+*/
+/* section global variables */
 const colorsDivID = $('#colors-js-puns');
 const tempSpanColorDiv = $('<div>Please select a T-shirt theme</div>').appendTo(colorsDivID);
-const colorSelectOption = $('select#color');
-const cornflowerblue = $(colorSelectOption).find('option[value = "cornflowerblue"]');
-const darkslategrey = $(colorSelectOption).find('option[value = "darkslategrey"]');
-const gold = $(colorSelectOption).find('option[value = "gold"]');
-const tomato = $(colorSelectOption).find('option[value = "tomato"]');
-const steelblue = $(colorSelectOption).find('option[value = "steelblue"]');
-const dimgrey = $(colorSelectOption).find('option[value = "dimgrey"]');
-//when the color 'design' select Box changes execute this block
-// study guide suggests to hide the 'SELECT THEME' option but it's better to leave this there so user is clear that this is the dropdown that is used to select the theme
 $('select#design').on('change', () => {
-    $('select#design > option:first').hide();
+    const modifyTshirtSelections = $('select#design').val();
+    // declare color  variables
+    const cornflowerblue = $(colorSelectOption).find('option[value = "cornflowerblue"]');
+    const darkslategrey = $(colorSelectOption).find('option[value = "darkslategrey"]');
+    const gold = $(colorSelectOption).find('option[value = "gold"]');
+    const tomato = $(colorSelectOption).find('option[value = "tomato"]');
+    const steelblue = $(colorSelectOption).find('option[value = "steelblue"]');
+    const dimgrey = $(colorSelectOption).find('option[value = "dimgrey"]');
+
+    $('select#design > option:first').hide(); // hide "select theme" on change
     $(tempSpanColorDiv).hide();
     $(colorSelectOption).show();
-    const modifyTshirtSelections = $('select#design').val();
+    
+/* set dropdown to specified index on change https://stackoverflow.com/questions/7445492/how-to-set-the-first-option-on-a-select-box-using-jquery */
     if (modifyTshirtSelections === 'js puns') {
-        /* set dropdown to specified index on change https://stackoverflow.com/questions/7445492/how-to-set-the-first-option-on-a-select-box-using-jquery */
         $(colorSelectOption).prop('selectedIndex', 0); 
         $(tomato).hide();
         $(steelblue).hide();
@@ -57,17 +65,11 @@ $('select#design').on('change', () => {
     }
 })
 
-
-
-
-
-
 /*********** ACTIVITIES SECTION **********/
-//inital value of cost of activities
-let totalActivityCost = 0;
-//element to display total activity cost
-const totalDiv = $(`<div></div>`).addClass('totalcost');
-$('.activities').append(totalDiv);
+/* section global variables */
+let totalActivityCost = 0;  //inital value of cost of activities
+const totalDiv = $(`<div></div>`).addClass('totalcost');  
+$('.activities').append(totalDiv); //element to display total activity cost
 
 //Listen for changes in the activity section
 $('.activities').on('change', (event) => {
@@ -75,78 +77,50 @@ $('.activities').on('change', (event) => {
 
     let clickedElement = $(event.target);
     let valueOfParent = clickedElement.parent('label').text();
-    console.log(valueOfParent);
-    console.log('this is the cliecked element: ' + clickedElement.attr('type'));//result = checkbox
-
+    const checkboxes = $('[type="checkbox"]');
     //The index of the dollar sign ‘$’ in the label text from the variable (that you declared above).
     let dollarSign = '$';
     let indexOfDollarSign = valueOfParent.indexOf(dollarSign);// return index of dollar sign
-
-    //The cost of the activity the was just clicked. Using a method like `.slice()` and the index of the dollar sign, you can target the cost at the end of the label string. https://stackoverflow.com/questions/24200493/jquery-cut-off-div-text-after-4-characters
-    let fullDollarAmountOfClickedItem = parseInt(valueOfParent.slice(indexOfDollarSign+1));
-    console.log(typeof fullDollarAmountOfClickedItem);
+    //The cost of the activity the was just clicked. https://stackoverflow.com/questions/24200493/jquery-cut-off-div-text-after-4-characters
+    let fullDollarAmountOfClickedItem = parseInt(valueOfParent.slice(indexOfDollarSign + 1));
+    let emDash = '—';
+    let indexOfEmDash = valueOfParent.indexOf(emDash);
+    let comma = ',';
+    let indexOfComma = valueOfParent.indexOf(comma);
+    let dayAndTime = valueOfParent.slice(indexOfEmDash + 1, indexOfComma);
+   
     clickedElement.each(() => {
         if ($(clickedElement).is(':checked')) { // is the clicked element checked?
-            console.log('it clicked');
             totalActivityCost += parseInt(fullDollarAmountOfClickedItem);
-            console.log(totalActivityCost);
         } else {
             totalActivityCost -= parseInt(fullDollarAmountOfClickedItem);
         }
-        
         totalDiv.text(`The total cost is: ` + totalActivityCost);
     });
-    
-    //get index of the em dash — in the label text
-    let emDash = '—';
-    let indexOfEmDash = valueOfParent.indexOf(emDash);
-    console.log(indexOfEmDash);
 
-    //get index of the comma , in the label text
-    let comma = ',';
-    let indexOfComma = valueOfParent.indexOf(comma);
-    console.log(indexOfComma);
-
-    let dayAndTime = valueOfParent.slice(indexOfEmDash+1, indexOfComma);
-    console.log(dayAndTime);
-
-    
-    //https://stackoverflow.com/questions/3657630/jquery-disable-duplicate-checkboxes-when-checked
-   // When an activity is checked, disable any activity that occurs at the same day and time(i.e. "conflicting activities") without disabling the activity that was just checked.
-    for (let i = 0; i < clickedElement.length; i++) {
-        const boxThatIsClicked = $(clickedElement[i]);
-        console.log($(clickedElement).valueOfParent + 'line 117 now');
-        if ($(this).prop("checked")) {
-            $(valueOfParent).prop('disabled', !this.checked)
-            // if ($(clickedElement).attr('checked')) {
-            //     clickedElement.attr('disabled', false);
-            //     console.log('line 122')
-            // } else {
-            //     clickedElement.attr('disabled', true);
-            //     console.log('line 125')
-            // }
-            clickedElement.prop('disabled', true);
-
-        } else {
-                clickedElement.prop('disabled', false);
+   // When an activity is checked, disable any activity that occurs at the same day and time without disabling the activity that was just checked.
+    for (let i = 0; i < checkboxes.length; i++) {
+        const boxThatIsClicked = checkboxes[i].parentElement.textContent;
+        // if the text of the input.includes() AND the value of parent is not the element that is clicked now
+        if (boxThatIsClicked.includes(dayAndTime) && valueOfParent != boxThatIsClicked) { 
+            if (clickedElement.prop('checked') === false) {
+                checkboxes[i].disabled = false;
+            } else {
+                checkboxes[i].disabled = true;
+       
+            }
         }
-        
     }
-
 });
-
-
-
 
 /*********** PAYMENT SECTION **********/
 //payment options globals
 let creditCardOption = $('#credit-card');
 let paypalSibling = $(creditCardOption).next();
 let bitCoinSibling = $(paypalSibling).next();
-
 /*
 ON PAGE LOAD:
- 1) Hide the“ Select Payment Method” `option`so it doesn’ t show up in the drop down menu 
+ 1) Hide the“ Select Payment Method” `option`so it does not show up in the drop down menu 
  2) hide bitcoin and paypal divs.
  3) set first selection to credit card and show credit card form
 */
@@ -156,15 +130,12 @@ $(document).ready(() => {
     $(paypalSibling).hide();
     $(bitCoinSibling).hide();
 })
-
-
 // listen for changes on the payment select dropdown
 $('select#payment').on('change', () => {
     $('select#payment > option:first').hide();
     let selectedPaymentMethod = $('select#payment').val();
     /*
-Get the value of the payment select element, and
-if it’ s equal to‘ credit card’, set the credit card payment section in the form to show, and set the other two options to hide.
+Get the value of the payment select element, if it is equal to ‘credit card’, set the credit card payment section in the form to show, and set the other two options to hide.
 */    
     if (selectedPaymentMethod === 'credit card') {
         $(creditCardOption).show();
@@ -187,51 +158,40 @@ Repeat the above step with the PayPal and BitCoin options so that the selected p
     
 })
 
-
-
-const nameInput = $('input#name');
+/*****FORM VALIDATION*****/
 $('form').on("submit", function (event) {
     event.preventDefault();
-    let selectedPaymentMethod = $('select#payment').val();
+    let input = $(event.target);
 
-    // .each((index, element) => {
-        
-    // })
-    
+    let selectedPaymentMethod = $('select#payment').val();
+    const nameInput = $('input#name');
+    input.each((index, element) => {
     const nameInputValue = $(nameInput).val();
-    if (nameInputValue === '') {
+    if (nameInputValue === '' || nameInput.length < 3) {
         let nameError = $('<div>*Name must be three characters or more</div> <br/>')
             .css({
                     'color': 'red',
                     'text-transform': 'uppercase',
                     'margin-bottom': '5%'
                 })
-            .insertAfter(nameInput);
-        
+            .insertAfter(nameInput);    
     }
    // https://formden.com/blog/validate-contact-form-jquery
     // test email validation
-    let input = $(this);
-    //let re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    
+        const emailInput = $('input#mail');
+        const emailInputValue = $(emailInput).val();
+        let re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     //let re = /^[A-Z0-9][A-Z0-9._%+-]{0,63}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/;
-    
-    let is_email = re.test(input.val());
-    console.log(is_email)
-
-    const emailInput = $('input#mail');
-    const emailInputValue = $(emailInput).val();
+        let is_email = re.test(emailInputValue);
     // possible email regex let emailRegEx = /^[A-Z0-9][A-Z0-9._%+-]{0,63}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/;
-    if (emailInputValue === '' || !is_email) {
-        
+    if (emailInputValue === ''|| !emailInputValue) {
         let emailError = $('<div>*Email must be a valid email</div><br/>')
             .css({
                     'color': 'red',
                     'text-transform': 'uppercase',
                     'margin-bottom': '5%'
                 })
-            .insertAfter(emailInput);
-       
+            .insertAfter(emailInput);   
     }
 
     const creditCardNumber = $('#cc-num');
@@ -270,41 +230,8 @@ $('form').on("submit", function (event) {
         }
     }
     
-
+    })
 });
-
-
-/*
-const submitButton = $('button').attr('type', 'submit');
-$(submitButton).submit((event) => {
-    // event.preventDefault();
-    if (name === '') {
-        alert('Text-field is empty.');
-        return false;
-    }
-    
-    //validateName();
-})
-function validateName() {
-    const nameInput = $('input#name').val();
-    const nameError = $('<div>Name must be three characters or more</div>').appendTo($('input#name'))
-
-    if (nameInput === '') {
-        $('<div>Name must be three characters or more</div>').appendTo($('input#name'));
-        console.log('name input')
-    }
-}
-*/
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -330,9 +257,20 @@ $('li').each((index, element) => {
 get text of parent element 'label' https://stackoverflow.com/questions/19228839/why-i-cant-get-value-of-label-with-jquery-and-javascript
 */
 /*
-how to see
-if element is checked ? https : //stackoverflow.com/questions/9887360/how-can-i-check-if-a-checkbox-is-checked
+how to see if element is checked ? https://stackoverflow.com/questions/9887360/how-can-i-check-if-a-checkbox-is-checked
 */
 /*
 remove attr and add attr https://forum.jquery.com/topic/uncheck-and-disable-multiple-checkboxes-with-one-checkbox
+*/
+
+/* PSEUDO CODE
+
+for (let i = 0; i < checkboxes.length; i++) {
+    const textOfCheckbox = checkboxes[i].parentElement.textContent
+
+    if (textOfCheckbox includes the dayAndTime and clickedInput is not equal to checkboxes[i]) {
+        toggle the disabled property on and off
+    }
+
+}
 */
