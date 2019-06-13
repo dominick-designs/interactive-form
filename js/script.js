@@ -171,13 +171,6 @@ const nameError = $('<div>*Name must be more than one character</div> <br/>')
     .insertAfter(nameInput);
 const nameRegEx = /^[a-zA-Z]+$/;
 const is_name = nameRegEx.test($(nameInputValue));
-function validateNameInput() {
-    if (is_name == false) {
-        $(nameError).show();
-    } else {
-        $(nameError).hide();
-    }
-}
 // validate name input on blur
 nameInput.focusout(()=> {
     if (is_name == false) {
