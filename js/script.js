@@ -158,42 +158,73 @@ Repeat the above step with the PayPal and BitCoin options so that the selected p
     
 })
 
+
 /*****FORM VALIDATION*****/
-$('form').on("submit", function (event) {
+
+const cssError = { backgroundColor: 'red', color: 'white', 'text-transform': 'uppercase' };
+
+const nameInput = $('input#name');
+const nameInputValue = $(nameInput).val();
+const nameError = $('<div>*Name must be more than one character</div> <br/>')
+    .css(cssError)
+    .hide()
+    .insertAfter(nameInput);
+const nameRegEx = /^[a-zA-Z]+$/;
+const is_name = nameRegEx.test($(nameInputValue));
+function validateNameInput() {
+    if (is_name == false) {
+        $(nameError).show();
+    } else {
+        $(nameError).hide();
+    }
+}
+// validate name input on blur
+nameInput.focusout(()=> {
+    if (is_name == false) {
+        $(nameError).show();
+        return false;
+    } else {
+        $(nameError).hide();
+        return true;
+    }
+    
+ })
+
+/*
+// email validation
+ const emailInput = $('#mail');
+ const emailInputValue = $(emailInput).val();
+ const emailError = $('<div>* Email must be valid</div> <br/>')
+     .css(cssError)
+     .hide()
+     .insertAfter(emailInput);
+function validateEmailInput() {
+    // https://formden.com/blog/validate-contact-form-jquery
+    let emailRegEx = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    let is_email = emailRegEx.test(emailInputValue);
+    if (is_email) {
+        $(emailError).hide()
+    } else {
+        $(emailError).show();
+    }
+}
+emailInput.focusout(() => {
+    if (emailInputValue !== '') {
+        validateEmailInput();
+    } else {
+        $(emailError).hide()
+    }
+    
+})
+*/
+
+
+/*
+function validateCreditCardInputs() {
     event.preventDefault();
     let input = $(event.target);
 
     let selectedPaymentMethod = $('select#payment').val();
-    const nameInput = $('input#name');
-    input.each((index, element) => {
-    const nameInputValue = $(nameInput).val();
-    if (nameInputValue === '' || nameInput.length < 3) {
-        let nameError = $('<div>*Name must be three characters or more</div> <br/>')
-            .css({
-                    'color': 'red',
-                    'text-transform': 'uppercase',
-                    'margin-bottom': '5%'
-                })
-            .insertAfter(nameInput);    
-    }
-   // https://formden.com/blog/validate-contact-form-jquery
-    // test email validation
-        const emailInput = $('input#mail');
-        const emailInputValue = $(emailInput).val();
-        let re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    //let re = /^[A-Z0-9][A-Z0-9._%+-]{0,63}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/;
-        let is_email = re.test(emailInputValue);
-    // possible email regex let emailRegEx = /^[A-Z0-9][A-Z0-9._%+-]{0,63}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/;
-    if (emailInputValue === ''|| !emailInputValue) {
-        let emailError = $('<div>*Email must be a valid email</div><br/>')
-            .css({
-                    'color': 'red',
-                    'text-transform': 'uppercase',
-                    'margin-bottom': '5%'
-                })
-            .insertAfter(emailInput);   
-    }
-
     const creditCardNumber = $('#cc-num');
     let creditCardNumberValue = $(creditCardNumber).val();
     const creditCardZip = $('#zip');
@@ -229,13 +260,14 @@ $('form').on("submit", function (event) {
                 .insertAfter(creditCardCvv);
         }
     }
-    
-    })
+}
+
+
+// event listener to handle event functions
+$('form').on("submit", function (event) {
+    validateNameInput();    
 });
-
-
-
-
+*/
 
 
 /*NOTES:
