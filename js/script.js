@@ -68,11 +68,12 @@ $('select#design').on('change', () => {
 /*********** ACTIVITIES SECTION **********/
 /* section global variables */
 let totalActivityCost = 0;  //inital value of cost of activities
+const activitiesInput = $('.activities');
 const totalDiv = $(`<div></div>`).addClass('totalcost');  
-$('.activities').append(totalDiv); //element to display total activity cost
+$(activitiesInput).append(totalDiv); //element to display total activity cost
 
 //Listen for changes in the activity section
-$('.activities').on('change', (event) => {
+$(activitiesInput).on('change', (event) => {
     event.preventDefault();
 
     let clickedElement = $(event.target);
@@ -154,114 +155,198 @@ Repeat the above step with the PayPal and BitCoin options so that the selected p
         $(bitCoinSibling).show();
         $(paypalSibling).hide();
         $(creditCardOption).hide();       
-    }
-    
+    }   
 })
-
 
 /*****FORM VALIDATION*****/
 
-const cssError = {'backgroundColor': 'red', 'color': 'white', 'text-transform': 'uppercase', 'font-size': '1.2em'};
+const cssError = { 'backgroundColor': 'red', 'color': 'white', 'text-transform': 'uppercase', 'font-size': '1.1em', 'border': '5px, solid, gray', 'padding': '10px 0px 10px 30px' };
 
 const nameInput = $('#name');
-const nameError = $('<div>* Name must be 2 and 20 characters</div> <br/>')
+const nameError = $(`<div> * Name must be 2 and 20 characters</div> <br/>`)
     .css(cssError)
     .hide()
     .insertAfter(nameInput);
-
-
 // validate name input on blur
-nameInput.focusout((event) => {
+
+  
+
+
+function nameListener() {
     //check value of input on blur (not on page load)
-    const nameInputValue = $('#name').val();
-    const nameRegEx = /^([a-zA-Z0-9_-]){4,20}$/;
+    const nameInputValue = $(nameInput).val();
+    const nameRegEx = /^([a-zA-Z0-9_-]){2,20}$/;
     const validateUsingRegEx = nameRegEx.test(nameInputValue);
     if (validateUsingRegEx) {
+        $(nameInput).css('border', '0px');
         $(nameError).hide();
     } else {
-        $('#name').css('border', '1px solid red');
-        $(nameError).show();  
-    }  
+        $(nameInput).css('border', '1px solid red');
+        $(nameError).show();
+    }
+}
+
+nameInput.focusout(() => {
+    const nameInputValue = $(nameInput).val();
+    if (nameInputValue == '' || nameInputValue !== '') {
+        nameListener();
+    } else {
+        $(nameError).hide();
+    }
 });
 
-/*
 // email validation
- const emailInput = $('#mail');
- const emailInputValue = $(emailInput).val();
- const emailError = $('<div>* Email must be valid</div> <br/>')
-     .css(cssError)
-     .hide()
-     .insertAfter(emailInput);
-function validateEmailInput() {
-    // https://formden.com/blog/validate-contact-form-jquery
-    let emailRegEx = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    let is_email = emailRegEx.test(emailInputValue);
-    if (is_email) {
-        $(emailError).hide()
+const emailInput = $('#mail');
+const emailError = $('<div>* Email must be valid</div> <br/>')
+    .css(cssError)
+    .hide()
+    .insertAfter(emailInput);
+function emailListener() {
+    //check value of input on blur (not on page load)
+    const emailInputValue = $(emailInput).val();
+    // Regex source: https://stackoverflow.com/questions/4964691/super-simple-email-validation-with-javascript
+    const emailRegEx = /(.+)@(.+){2,}\.(.+){2,}/;
+    const validateUsingRegEx = emailRegEx.test(emailInputValue);
+    if (validateUsingRegEx) {
+        $(emailInput).css('border', '0px');
+        $(emailError).hide();
     } else {
+        $(emailInput).css('border', '1px solid red');
         $(emailError).show();
     }
 }
+ 
 emailInput.focusout(() => {
-    if (emailInputValue !== '') {
-        validateEmailInput();
+    const emailInputValue = $(emailInput).val();
+ if (emailInputValue == '' || emailInputValue !== '') {
+     emailListener();
+ } else {
+     $(emailError).hide();
+ }
+});
+
+
+
+//activity validation: validate at least 1 checkbox checked
+const activitiesError = $('<div>* You must choose at least one activity</div> <br/>')
+    .css(cssError)
+    .hide()
+    .insertAfter(activitiesInput);
+function activityListener() {
+    if ($('.activities input:checked').length > 0) {
+        $(activitiesError).hide();
     } else {
-        $(emailError).hide()
-    }
-    
-})
-*/
-
-
-/*
-function validateCreditCardInputs() {
-    event.preventDefault();
-    let input = $(event.target);
-
-    let selectedPaymentMethod = $('select#payment').val();
-    const creditCardNumber = $('#cc-num');
-    let creditCardNumberValue = $(creditCardNumber).val();
-    const creditCardZip = $('#zip');
-    let creditCardZipValue = $(creditCardZip).val();
-    const creditCardCvv = $('#cvv');
-    let creditCardCvvValue = $(creditCardCvv).val();
-    if (selectedPaymentMethod === 'credit card') {
-        if (isNaN(creditCardNumberValue) || creditCardNumberValue === '' || creditCardNumberValue.length < 13 || creditCardNumberValue.length > 16) {
-            $('<div>*Credit Card Number must be valid</div><br/><div></div>')
-                .css({
-                    'color': 'red',
-                    'text-transform': 'uppercase',
-                    'margin-bottom': '5%'
-                })
-                .insertAfter(creditCardNumber);
-        }
-        if (creditCardZipValue === '') {
-            $('<div>*Zip code must be valid</div><br/><div></div>')
-                .css({
-                    'color': 'red',
-                    'text-transform': 'uppercase',
-                    'margin-bottom': '5%'
-                })
-                .insertAfter(creditCardZip);
-        }
-        if (creditCardCvvValue === '') {
-            $('<div>*CVV must be valid</div><br/><div></div>')
-                .css({
-                    'color': 'red',
-                    'text-transform': 'uppercase',
-                    'margin-bottom': '5%'
-                })
-                .insertAfter(creditCardCvv);
-        }
+        $(activitiesError).show();
     }
 }
+$(activitiesInput).on('change', () => {
+    if ($('.activities input:checked').length === 0) { 
+        activityListener();
+    } else {
+        $(activitiesError).hide();
+    }
+});
+
+// validate credit card inputs
+const creditCardNumber = $('#cc-num');
+const creditCardZip = $('#zip');
+const creditCardCvv = $('#cvv');
+//credit card error messages
+const creditCardError = $('<div>* Credit card number must be valid</div> <br/>')
+    .css(cssError)
+    .hide()
+    .insertAfter(creditCardNumber);
+const zipError = $('<div>* Zip code must be valid</div> <br/>')
+    .css(cssError)
+    .hide()
+    .insertAfter(creditCardZip);
+const cvvError = $('<div>* CVV number must be valid</div> <br/>')
+    .css(cssError)
+    .hide()
+    .insertAfter(creditCardCvv);
+
+//on blur validate credit card input fields (number, zip, CVV)
+function creditCardListener() {
+    let selectedPaymentMethod = $('#payment').val();
+    if (selectedPaymentMethod === 'credit card') {
+        const creditCardNumberValue = $(creditCardNumber).val();
+        const creditCardRegEx = /^[0-9]{13,16}$/;
+        const validateUsingRegEx = creditCardRegEx.test(creditCardNumberValue);
+        if (validateUsingRegEx) {
+            $(creditCardNumber).css('border', '0px');
+            $(creditCardError).hide();
+        } else {
+            $(creditCardNumber).css('border', '1px solid red');
+            $(creditCardError).show();
+        }
+
+        const creditCardZipValue = $(creditCardZip).val();
+        const creditCardZipRegEx = /^[0-9]{5}$/;
+        const validateZipUsingRegEx = creditCardZipRegEx.test(creditCardZipValue);
+        if (validateZipUsingRegEx) {
+            $(creditCardZip).css('border', '0px');
+            $(zipError).hide();
+        } else {
+            $(creditCardZip).css('border', '1px solid red');
+            $(zipError).show();
+        }
+
+        const creditCardCvvValue = $(creditCardCvv).val();
+        const cvvRegEx = /^[0-9]{3}$/;
+        const validateCvvUsingRegEx = cvvRegEx.test(creditCardCvvValue);
+        if (validateCvvUsingRegEx) {
+            $(creditCardCvv).css('border', '0px');
+            $(cvvError).hide();
+        } else {
+            $(creditCardCvv).css('border', '1px solid red');
+            $(cvvError).show();
+        }
+       
+    };
+}
+creditCardNumber.focusout(() => {
+    //check value of input on blur (not on page load)
+    const creditCardNumberValue = $(creditCardNumber).val();
+    if (creditCardNumberValue == '' || creditCardNumberValue !== '') {
+        creditCardListener();
+    } else {
+        $(creditCardNumber).css('border', '0px');
+        $(creditCardError).hide();
+    }
+    
+});
+creditCardZip.focusout(() => {
+    //check value of input on blur (not on page load)
+    const creditCardZipValue = $(creditCardZip).val();
+    if (creditCardZipValue == '' || creditCardZipValue !== '') {
+        creditCardListener();
+    } else {
+        $(creditCardZip).css('border', '0px');
+        $(zipError).hide();
+    }
+});
+creditCardCvv.focusout(() => {
+    //check value of input on blur (not on page load)
+    const creditCardCvvValue = $(creditCardCvv).val();
+    if (creditCardCvvValue == '' || creditCardCvvValue !== '') {
+        creditCardListener();
+    } else {
+        $(creditCardCvv).css('border', '0px');
+        $(cvvError).hide();
+    }
+});
 
 
 // event listener to handle event functions
 $('form').on("submit", function (event) {
-    validateNameInput();    
+    event.preventDefault();
+    nameListener(); 
+    emailListener();
+    activityListener();
+    creditCardListener();
 });
-*/
+
+
 
 
 /*NOTES:
@@ -299,4 +384,14 @@ for (let i = 0; i < checkboxes.length; i++) {
     }
 
 }
+*/
+
+/*
+helpful RegEx tool to translate each part of Regex:
+https://regexr.com/
+useful lists of Regex for jquery:
+1) http://www.designchemical.com/blog/index.php/jquery/form-validation-using-jquery-and-regular-expressions/
+2) http://www.tutorialspark.com/javascript/JavaScript_Regular_Expression_Form_Validation.php
+
+
 */
