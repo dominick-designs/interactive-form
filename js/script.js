@@ -161,27 +161,28 @@ Repeat the above step with the PayPal and BitCoin options so that the selected p
 
 /*****FORM VALIDATION*****/
 
-const cssError = { backgroundColor: 'red', color: 'white', 'text-transform': 'uppercase' };
+const cssError = {'backgroundColor': 'red', 'color': 'white', 'text-transform': 'uppercase', 'font-size': '1.2em'};
 
-const nameInput = $('input#name');
-const nameInputValue = $(nameInput).val();
-const nameError = $('<div>*Name must be more than one character</div> <br/>')
+const nameInput = $('#name');
+const nameError = $('<div>* Name must be 2 and 20 characters</div> <br/>')
     .css(cssError)
     .hide()
     .insertAfter(nameInput);
-const nameRegEx = /^[a-zA-Z]+$/;
-const is_name = nameRegEx.test($(nameInputValue));
+
+
 // validate name input on blur
-nameInput.focusout(()=> {
-    if (is_name == false) {
-        $(nameError).show();
-        return false;
-    } else {
+nameInput.focusout((event) => {
+    //check value of input on blur (not on page load)
+    const nameInputValue = $('#name').val();
+    const nameRegEx = /^([a-zA-Z0-9_-]){4,20}$/;
+    const validateUsingRegEx = nameRegEx.test(nameInputValue);
+    if (validateUsingRegEx) {
         $(nameError).hide();
-        return true;
-    }
-    
- })
+    } else {
+        $('#name').css('border', '1px solid red');
+        $(nameError).show();  
+    }  
+});
 
 /*
 // email validation
