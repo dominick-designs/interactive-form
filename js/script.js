@@ -3,6 +3,7 @@
 // $(".container").find("fieldset").eq(1).hide();
 // $(".container").find("fieldset").eq(2).hide();
 
+
 /* section global variables */
 const colorSelectOption = $('select#color');
 const otherJobTitleInput = $('#other-title');
@@ -12,7 +13,6 @@ $(document).ready(function () {
     $(colorSelectOption).hide();
     $(otherJobTitleInput).hide();
     /* insert text telling user to select T-shirt theme */
-
 });
 //if the value of 'job role' select box is 'OTHER' reveal the 'other job role' input
 $('select#title').on('change', () => {
@@ -41,10 +41,10 @@ $('select#design').on('change', () => {
     const dimgrey = $(colorSelectOption).find('option[value = "dimgrey"]');
 
     $('select#design > option:first').hide(); // hide "select theme" on change
-    $(tempSpanColorDiv).hide();
+    $(tempSpanColorDiv).hide(); 
     $(colorSelectOption).show();
     
-/* set dropdown to specified index on change https://stackoverflow.com/questions/7445492/how-to-set-the-first-option-on-a-select-box-using-jquery */
+/* set dropdown to specified index on change; adapted from https://stackoverflow.com/questions/7445492/how-to-set-the-first-option-on-a-select-box-using-jquery */
     if (modifyTshirtSelections === 'js puns') {
         $(colorSelectOption).prop('selectedIndex', 0); 
         $(tomato).hide();
@@ -74,27 +74,25 @@ $(activitiesInput).append(totalDiv); //element to display total activity cost
 
 //Listen for changes in the activity section
 $(activitiesInput).on('change', (event) => {
-    event.preventDefault();
-
     let clickedElement = $(event.target);
-    let valueOfParent = clickedElement.parent('label').text();
+    let valueOfParent = clickedElement.parent('label').text(); // get the text of the parent of clicked element
     const checkboxes = $('[type="checkbox"]');
-    //The index of the dollar sign ‘$’ in the label text from the variable (that you declared above).
+    //The index of the dollar sign ‘$’ in the label text from the variable (declared above).
     let dollarSign = '$';
     let indexOfDollarSign = valueOfParent.indexOf(dollarSign);// return index of dollar sign
-    //The cost of the activity the was just clicked. https://stackoverflow.com/questions/24200493/jquery-cut-off-div-text-after-4-characters
+    //The cost of the activity the was just clicked. adapted from https://stackoverflow.com/questions/24200493/jquery-cut-off-div-text-after-4-characters
     let fullDollarAmountOfClickedItem = parseInt(valueOfParent.slice(indexOfDollarSign + 1));
     let emDash = '—';
-    let indexOfEmDash = valueOfParent.indexOf(emDash);
+    let indexOfEmDash = valueOfParent.indexOf(emDash);  // get the index of the em dash
     let comma = ',';
-    let indexOfComma = valueOfParent.indexOf(comma);
-    let dayAndTime = valueOfParent.slice(indexOfEmDash + 1, indexOfComma);
+    let indexOfComma = valueOfParent.indexOf(comma);  // get the index of the comma
+    let dayAndTime = valueOfParent.slice(indexOfEmDash + 1, indexOfComma); // slice the day and time
    
     clickedElement.each(() => {
         if ($(clickedElement).is(':checked')) { // is the clicked element checked?
-            totalActivityCost += parseInt(fullDollarAmountOfClickedItem);
+            totalActivityCost += parseInt(fullDollarAmountOfClickedItem); //convert to digit and add to total cost
         } else {
-            totalActivityCost -= parseInt(fullDollarAmountOfClickedItem);
+            totalActivityCost -= parseInt(fullDollarAmountOfClickedItem); //convert to digit and subtract
         }
         totalDiv.text(`The total cost is: ` + totalActivityCost);
     });
@@ -102,13 +100,12 @@ $(activitiesInput).on('change', (event) => {
    // When an activity is checked, disable any activity that occurs at the same day and time without disabling the activity that was just checked.
     for (let i = 0; i < checkboxes.length; i++) {
         const boxThatIsClicked = checkboxes[i].parentElement.textContent;
-        // if the text of the input.includes() AND the value of parent is not the element that is clicked now
+        // if the text of the input.includes() dayAndTime AND the value of parent is not the element that is clicked now
         if (boxThatIsClicked.includes(dayAndTime) && valueOfParent != boxThatIsClicked) { 
             if (clickedElement.prop('checked') === false) {
                 checkboxes[i].disabled = false;
             } else {
                 checkboxes[i].disabled = true;
-       
             }
         }
     }
@@ -163,30 +160,30 @@ Repeat the above step with the PayPal and BitCoin options so that the selected p
 const cssError = { 'backgroundColor': 'red', 'color': 'white', 'text-transform': 'uppercase', 'font-size': '1.1em', 'border': '5px, solid, gray', 'padding': '10px 0px 10px 30px' };
 
 const nameInput = $('#name');
-const nameError = $(`<div> * Name must be 2 and 20 characters</div> <br/>`)
+const nameError = $(`<div> * Name must be 1 and 20 characters</div> <br/>`)
     .css(cssError)
     .hide()
     .insertAfter(nameInput);
 // validate name input on blur
 
-  
-
 
 function nameListener() {
     //check value of input on blur (not on page load)
     const nameInputValue = $(nameInput).val();
-    const nameRegEx = /^([a-zA-Z0-9_-]){2,20}$/;
-    const validateUsingRegEx = nameRegEx.test(nameInputValue);
-    if (validateUsingRegEx) {
+    // const nameRegEx = /^([a-zA-Z0-9_-]){1,20}$/;
+    // const validateUsingRegEx = nameRegEx.test(nameInputValue);
+    if (nameInputValue !== '') {
         $(nameInput).css('border', '0px');
         $(nameError).hide();
+        return true;
     } else {
         $(nameInput).css('border', '1px solid red');
         $(nameError).show();
+        return false;
     }
 }
 
-nameInput.focusout(() => {
+nameInput.blur(() => {
     const nameInputValue = $(nameInput).val();
     if (nameInputValue == '' || nameInputValue !== '') {
         nameListener();
@@ -216,7 +213,7 @@ function emailListener() {
     }
 }
  
-emailInput.focusout(() => {
+emailInput.blur(() => {
     const emailInputValue = $(emailInput).val();
  if (emailInputValue == '' || emailInputValue !== '') {
      emailListener();
@@ -225,18 +222,16 @@ emailInput.focusout(() => {
  }
 });
 
-
-
 //activity validation: validate at least 1 checkbox checked
 const activitiesError = $('<div>* You must choose at least one activity</div> <br/>')
     .css(cssError)
     .hide()
     .insertAfter(activitiesInput);
 function activityListener() {
-    if ($('.activities input:checked').length > 0) {
-        $(activitiesError).hide();
-    } else {
+    if (totalActivityCost === 0 /*$('.activities input:checked').length > 0*/) {
         $(activitiesError).show();
+    } else {
+        $(activitiesError).hide();
     }
 }
 $(activitiesInput).on('change', () => {
@@ -268,7 +263,6 @@ const cvvError = $('<div>* CVV number must be valid</div> <br/>')
 //on blur validate credit card input fields (number, zip, CVV)
 function creditCardListener() {
     let selectedPaymentMethod = $('#payment').val();
-    if (selectedPaymentMethod === 'credit card') {
         const creditCardNumberValue = $(creditCardNumber).val();
         const creditCardRegEx = /^[0-9]{13,16}$/;
         const validateUsingRegEx = creditCardRegEx.test(creditCardNumberValue);
@@ -301,10 +295,8 @@ function creditCardListener() {
             $(creditCardCvv).css('border', '1px solid red');
             $(cvvError).show();
         }
-       
-    };
 }
-creditCardNumber.focusout(() => {
+creditCardNumber.blur(() => {
     //check value of input on blur (not on page load)
     const creditCardNumberValue = $(creditCardNumber).val();
     if (creditCardNumberValue == '' || creditCardNumberValue !== '') {
@@ -315,7 +307,7 @@ creditCardNumber.focusout(() => {
     }
     
 });
-creditCardZip.focusout(() => {
+creditCardZip.blur(() => {
     //check value of input on blur (not on page load)
     const creditCardZipValue = $(creditCardZip).val();
     if (creditCardZipValue == '' || creditCardZipValue !== '') {
@@ -325,7 +317,7 @@ creditCardZip.focusout(() => {
         $(zipError).hide();
     }
 });
-creditCardCvv.focusout(() => {
+creditCardCvv.blur(() => {
     //check value of input on blur (not on page load)
     const creditCardCvvValue = $(creditCardCvv).val();
     if (creditCardCvvValue == '' || creditCardCvvValue !== '') {
@@ -339,13 +331,13 @@ creditCardCvv.focusout(() => {
 
 // event listener to handle event functions
 $('form').on("submit", function (event) {
-    event.preventDefault();
     nameListener(); 
     emailListener();
     activityListener();
-    creditCardListener();
+    if (selectedPaymentMethod == 'credit card') {
+        creditCardListener();
+    }
 });
-
 
 
 
@@ -392,6 +384,4 @@ https://regexr.com/
 useful lists of Regex for jquery:
 1) http://www.designchemical.com/blog/index.php/jquery/form-validation-using-jquery-and-regular-expressions/
 2) http://www.tutorialspark.com/javascript/JavaScript_Regular_Expression_Form_Validation.php
-
-
 */
