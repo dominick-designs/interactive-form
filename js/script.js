@@ -22,138 +22,21 @@ $('select#title').on('change', () => {
     }
 })
 
-/*********** COLORS SECTION **********/
-//when the color 'design' select Box changes execute this block
-/* study guide suggests to initially hide the 'SELECT THEME' option on page load but it's better to leave this there so user is
-clear that this is the dropdown that is used to select the theme
-*/
-/* section global variables */
-const colorsDivID = $('#colors-js-puns');
-const tempSpanColorDiv = $('<div>Please select a T-shirt theme</div>').appendTo(colorsDivID);
-$('select#design').on('change', () => {
-    const modifyTshirtSelections = $('select#design').val();
-    // declare color  variables
-    const cornflowerblue = $(colorSelectOption).find('option[value = "cornflowerblue"]');
-    const darkslategrey = $(colorSelectOption).find('option[value = "darkslategrey"]');
-    const gold = $(colorSelectOption).find('option[value = "gold"]');
-    const tomato = $(colorSelectOption).find('option[value = "tomato"]');
-    const steelblue = $(colorSelectOption).find('option[value = "steelblue"]');
-    const dimgrey = $(colorSelectOption).find('option[value = "dimgrey"]');
 
-    $('select#design > option:first').hide(); // hide "select theme" on change
-    $(tempSpanColorDiv).hide(); 
-    $(colorSelectOption).show();
-    
-/* set dropdown to specified index on change; adapted from https://stackoverflow.com/questions/7445492/how-to-set-the-first-option-on-a-select-box-using-jquery */
-    if (modifyTshirtSelections === 'js puns') {
-        $(colorSelectOption).prop('selectedIndex', 0); 
-        $(tomato).hide();
-        $(steelblue).hide();
-        $(dimgrey).hide();
-        $(cornflowerblue).show();
-        $(darkslategrey).show();
-        $(gold).show();
-    }
-    if (modifyTshirtSelections === 'heart js') {
-        $(colorSelectOption).prop('selectedIndex', 3);
-        $(tomato).show();
-        $(steelblue).show();
-        $(dimgrey).show();
-        $(cornflowerblue).hide();
-        $(darkslategrey).hide();
-        $(gold).hide();
-    }
-})
 
-/*********** ACTIVITIES SECTION **********/
-/* section global variables */
-let totalActivityCost = 0;  //inital value of cost of activities
-const activitiesInput = $('.activities');
-const totalDiv = $(`<div></div>`).addClass('totalcost');  
-$(activitiesInput).append(totalDiv); //element to display total activity cost
 
-//Listen for changes in the activity section
-$(activitiesInput).on('change', (event) => {
-    let clickedElement = $(event.target);
-    let valueOfParent = clickedElement.parent('label').text(); // get the text of the parent of clicked element
-    const checkboxes = $('[type="checkbox"]');
-    //The index of the dollar sign ‘$’ in the label text from the variable (declared above).
-    let dollarSign = '$';
-    let indexOfDollarSign = valueOfParent.indexOf(dollarSign);// return index of dollar sign
-    //The cost of the activity the was just clicked. adapted from https://stackoverflow.com/questions/24200493/jquery-cut-off-div-text-after-4-characters
-    let fullDollarAmountOfClickedItem = parseInt(valueOfParent.slice(indexOfDollarSign + 1));
-    let emDash = '—';
-    let indexOfEmDash = valueOfParent.indexOf(emDash);  // get the index of the em dash
-    let comma = ',';
-    let indexOfComma = valueOfParent.indexOf(comma);  // get the index of the comma
-    let dayAndTime = valueOfParent.slice(indexOfEmDash + 1, indexOfComma); // slice the day and time
-   
-    clickedElement.each(() => {
-        if ($(clickedElement).is(':checked')) { // is the clicked element checked?
-            totalActivityCost += parseInt(fullDollarAmountOfClickedItem); //convert to digit and add to total cost
-        } else {
-            totalActivityCost -= parseInt(fullDollarAmountOfClickedItem); //convert to digit and subtract
-        }
-        totalDiv.text(`The total cost is: ` + totalActivityCost);
-    });
 
-   // When an activity is checked, disable any activity that occurs at the same day and time without disabling the activity that was just checked.
-    for (let i = 0; i < checkboxes.length; i++) {
-        const boxThatIsClicked = checkboxes[i].parentElement.textContent;
-        // if the text of the input.includes() dayAndTime AND the value of parent is not the element that is clicked now
-        if (boxThatIsClicked.includes(dayAndTime) && valueOfParent != boxThatIsClicked) { 
-            if (clickedElement.prop('checked') === false) {
-                checkboxes[i].disabled = false;
-            } else {
-                checkboxes[i].disabled = true;
-            }
-        }
-    }
-});
 
-/*********** PAYMENT SECTION **********/
-//payment options globals
-let creditCardOption = $('#credit-card');
-let paypalSibling = $(creditCardOption).next();
-let bitCoinSibling = $(paypalSibling).next();
-/*
-ON PAGE LOAD:
- 1) Hide the“ Select Payment Method” `option`so it does not show up in the drop down menu 
- 2) hide bitcoin and paypal divs.
- 3) set first selection to credit card and show credit card form
-*/
-$(document).ready(() => {
-    $('select#payment > option:first').hide();
-    $('select#payment').prop('selectedIndex', 1);
-    $(paypalSibling).hide();
-    $(bitCoinSibling).hide();
-})
-// listen for changes on the payment select dropdown
-$('select#payment').on('change', () => {
-    $('select#payment > option:first').hide();
-    let selectedPaymentMethod = $('select#payment').val();
-    /*
-Get the value of the payment select element, if it is equal to ‘credit card’, set the credit card payment section in the form to show, and set the other two options to hide.
-*/    
-    if (selectedPaymentMethod === 'credit card') {
-        $(creditCardOption).show();
-        $(paypalSibling).hide();
-        $(bitCoinSibling).hide();       
-    }
-    /*
-Repeat the above step with the PayPal and BitCoin options so that the selected payment is shown and the others are hidden.
-*/
-    if (selectedPaymentMethod === 'paypal') {
-        $(paypalSibling).show();
-        $(creditCardOption).hide();
-        $(bitCoinSibling).hide();      
-    }
-    if (selectedPaymentMethod === 'bitcoin') {
-        $(bitCoinSibling).show();
-        $(paypalSibling).hide();
-        $(creditCardOption).hide();       
-    }   
-})
+
+
+
+
+
+
+
+
+
+
 
 /*****FORM VALIDATION*****/
 
@@ -166,10 +49,9 @@ const nameError = $(`<div> * Name must be 1 and 20 characters</div> <br/>`)
     .insertAfter(nameInput);
 // validate name input on blur
 
-
+const nameInputValue = $(nameInput).val();
 function nameListener() {
     //check value of input on blur (not on page load)
-    const nameInputValue = $(nameInput).val();
     // const nameRegEx = /^([a-zA-Z0-9_-]){1,20}$/;
     // const validateUsingRegEx = nameRegEx.test(nameInputValue);
     if (nameInputValue !== '') {
@@ -185,9 +67,10 @@ function nameListener() {
 
 nameInput.blur(() => {
     const nameInputValue = $(nameInput).val();
-    if (nameInputValue == '' || nameInputValue !== '') {
+    if (nameInputValue == '') {
         nameListener();
     } else {
+        $(nameInput).css('border', '0px');
         $(nameError).hide();
     }
 });
@@ -198,49 +81,32 @@ const emailError = $('<div>* Email must be valid</div> <br/>')
     .css(cssError)
     .hide()
     .insertAfter(emailInput);
+const emailInputValue = $(emailInput).val();
 function emailListener() {
     //check value of input on blur (not on page load)
-    const emailInputValue = $(emailInput).val();
     // Regex source: https://stackoverflow.com/questions/4964691/super-simple-email-validation-with-javascript
     const emailRegEx = /(.+)@(.+){2,}\.(.+){2,}/;
     const validateUsingRegEx = emailRegEx.test(emailInputValue);
-    if (validateUsingRegEx) {
-        $(emailInput).css('border', '0px');
+    if (emailInputValue !== "" || validateUsingRegEx) {
+        $(emailInput).css('border', '10px solid pink');
         $(emailError).hide();
     } else {
         $(emailInput).css('border', '1px solid red');
         $(emailError).show();
     }
 }
- 
+
 emailInput.blur(() => {
     const emailInputValue = $(emailInput).val();
- if (emailInputValue == '' || emailInputValue !== '') {
-     emailListener();
- } else {
-     $(emailError).hide();
- }
+    if (emailInputValue == '' /*|| emailInputValue !== ''*/) {
+        emailListener();
+    } else {
+        $(emailInput).css('border', '0px');
+        $(emailError).hide();
+    }
 });
 
-//activity validation: validate at least 1 checkbox checked
-const activitiesError = $('<div>* You must choose at least one activity</div> <br/>')
-    .css(cssError)
-    .hide()
-    .insertAfter(activitiesInput);
-function activityListener() {
-    if (totalActivityCost === 0 /*$('.activities input:checked').length > 0*/) {
-        $(activitiesError).show();
-    } else {
-        $(activitiesError).hide();
-    }
-}
-$(activitiesInput).on('change', () => {
-    if ($('.activities input:checked').length === 0) { 
-        activityListener();
-    } else {
-        $(activitiesError).hide();
-    }
-});
+
 
 // validate credit card inputs
 const creditCardNumber = $('#cc-num');
@@ -260,52 +126,52 @@ const cvvError = $('<div>* CVV number must be valid</div> <br/>')
     .hide()
     .insertAfter(creditCardCvv);
 
+const creditCardNumberValue = $(creditCardNumber).val();
+const creditCardZipValue = $(creditCardZip).val();
+const creditCardCvvValue = $(creditCardCvv).val();
 //on blur validate credit card input fields (number, zip, CVV)
 function creditCardListener() {
     let selectedPaymentMethod = $('#payment').val();
-        const creditCardNumberValue = $(creditCardNumber).val();
-        const creditCardRegEx = /^[0-9]{13,16}$/;
-        const validateUsingRegEx = creditCardRegEx.test(creditCardNumberValue);
-        if (validateUsingRegEx) {
-            $(creditCardNumber).css('border', '0px');
-            $(creditCardError).hide();
-        } else {
-            $(creditCardNumber).css('border', '1px solid red');
-            $(creditCardError).show();
-        }
+    const creditCardRegEx = /^[0-9]{13,16}$/;
+    const validateUsingRegEx = creditCardRegEx.test(creditCardNumberValue);
+    if (validateUsingRegEx) {
+        $(creditCardNumber).css('border', '0px');
+        $(creditCardError).hide();
+    } else {
+        $(creditCardNumber).css('border', '1px solid red');
+        $(creditCardError).show();
+    }
 
-        const creditCardZipValue = $(creditCardZip).val();
-        const creditCardZipRegEx = /^[0-9]{5}$/;
-        const validateZipUsingRegEx = creditCardZipRegEx.test(creditCardZipValue);
-        if (validateZipUsingRegEx) {
-            $(creditCardZip).css('border', '0px');
-            $(zipError).hide();
-        } else {
-            $(creditCardZip).css('border', '1px solid red');
-            $(zipError).show();
-        }
+    const creditCardZipRegEx = /^[0-9]{5}$/;
+    const validateZipUsingRegEx = creditCardZipRegEx.test(creditCardZipValue);
+    if (validateZipUsingRegEx) {
+        $(creditCardZip).css('border', '0px');
+        $(zipError).hide();
+    } else {
+        $(creditCardZip).css('border', '1px solid red');
+        $(zipError).show();
+    }
 
-        const creditCardCvvValue = $(creditCardCvv).val();
-        const cvvRegEx = /^[0-9]{3}$/;
-        const validateCvvUsingRegEx = cvvRegEx.test(creditCardCvvValue);
-        if (validateCvvUsingRegEx) {
-            $(creditCardCvv).css('border', '0px');
-            $(cvvError).hide();
-        } else {
-            $(creditCardCvv).css('border', '1px solid red');
-            $(cvvError).show();
-        }
+    const cvvRegEx = /^[0-9]{3}$/;
+    const validateCvvUsingRegEx = cvvRegEx.test(creditCardCvvValue);
+    if (creditCardCvvValue !== "" || validateCvvUsingRegEx) {
+        $(creditCardCvv).css('border', '0px');
+        $(cvvError).hide();
+    } else {
+        $(creditCardCvv).css('border', '1px solid red');
+        $(cvvError).show();
+    }
 }
 creditCardNumber.blur(() => {
     //check value of input on blur (not on page load)
     const creditCardNumberValue = $(creditCardNumber).val();
-    if (creditCardNumberValue == '' || creditCardNumberValue !== '') {
+    if (creditCardNumberValue == '') {
         creditCardListener();
     } else {
         $(creditCardNumber).css('border', '0px');
         $(creditCardError).hide();
     }
-    
+
 });
 creditCardZip.blur(() => {
     //check value of input on blur (not on page load)
@@ -328,16 +194,26 @@ creditCardCvv.blur(() => {
     }
 });
 
-
 // event listener to handle event functions
 $('form').on("submit", function (event) {
-    nameListener(); 
+    if (nameInputValue || emailInputValue === "") {
+        event.preventDefault();
+    }
+    nameListener();
     emailListener();
     activityListener();
-    if (selectedPaymentMethod == 'credit card') {
-        creditCardListener();
+
+    if (selectedPaymentMethod === 'credit card') {
+        if (creditCardNumberValue || creditCardZipValue || creditCardCvvValue === "") {
+            event.preventDefault();
+        }
     }
+    creditCardListener();
 });
+
+
+
+
 
 
 
