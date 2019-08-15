@@ -64,6 +64,7 @@ nameInput.blur(() => {
 
 /** validate email input */
 let emailListener = (() => {
+    const emailInputValue = $(emailInput).val();
     console.log('email = listerner here');
     // Regex source: https://stackoverflow.com/questions/4964691/super-simple-email-validation-with-javascript
     const emailRegEx = /(.+)@(.+){2,}\.(.+){2,}/;
@@ -80,7 +81,7 @@ let emailListener = (() => {
 });
 //check value of input on blur (not on page load)
 emailInput.blur(() => {
-    //const emailInputValue = $(emailInput).val();
+    const emailInputValue = $(emailInput).val();
     if (emailInputValue == '') {
         emailListener();
     } else {
@@ -96,9 +97,7 @@ $('form').on("submit", function (event) {
     if (emailInputValue === '') {
         event.preventDefault();
     }
-
-
-    if (nameInputValue == "") {
+    if (nameInputValue === '') {
         event.preventDefault();
     } else {
         nameListener();
