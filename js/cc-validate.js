@@ -25,9 +25,10 @@ const creditCardCvvValue = $(creditCardCvv).val();
 //validate on form submit
 function creditCardListener() {
     let selectedPaymentMethod = $('#payment').val();
+    const creditCardNumberValue = $(creditCardNumber).val();
     const creditCardRegEx = /^[0-9]{13,16}$/;
     const validateUsingRegEx = creditCardRegEx.test(creditCardNumberValue);
-    if (creditCardNumberValue == "" || validateUsingRegEx) {
+    if (validateUsingRegEx) {
         $(creditCardNumber).css('border', '0px');
         $(creditCardError).hide();
         return true;
@@ -39,6 +40,7 @@ function creditCardListener() {
 }
 
 function creditCardZipListener() {
+    const creditCardZipValue = $(creditCardZip).val();
     const creditCardZipRegEx = /^[0-9]{5}$/;
     const validateZipUsingRegEx = creditCardZipRegEx.test(creditCardZipValue);
     if (validateZipUsingRegEx) {
@@ -49,11 +51,11 @@ function creditCardZipListener() {
         $(zipError).show();
     }
 }
-
 function creditCardCvvListener() {
+    const creditCardCvvValue = $(creditCardCvv).val();
     const cvvRegEx = /^[0-9]{3}$/;
     const validateCvvUsingRegEx = cvvRegEx.test(creditCardCvvValue);
-    if (creditCardCvvValue !== "" || validateCvvUsingRegEx) {
+    if (validateCvvUsingRegEx) {
         $(creditCardCvv).css('border', '0px');
         $(cvvError).hide();
     } else {
@@ -61,12 +63,13 @@ function creditCardCvvListener() {
         $(cvvError).show();
     }
 }
-
 //on blur validate credit card input fields (number, zip, CVV)
 creditCardNumber.blur(() => {
     //check value of input on blur (not on page load)
     const creditCardNumberValue = $(creditCardNumber).val();
-    if (creditCardNumberValue == '') {
+    const creditCardRegEx = /^[0-9]{13,16}$/;
+    const validateUsingRegEx = creditCardRegEx.test(creditCardNumberValue);
+    if (creditCardNumberValue !== validateUsingRegEx) {
         creditCardListener();
     } else {
         $(creditCardNumber).css('border', '0px');
@@ -77,7 +80,9 @@ creditCardNumber.blur(() => {
 creditCardZip.blur(() => {
     //check value of input on blur (not on page load)
     const creditCardZipValue = $(creditCardZip).val();
-    if (creditCardZipValue == '') {
+    const creditCardZipRegEx = /^[0-9]{5}$/;
+    const validateZipUsingRegEx = creditCardZipRegEx.test(creditCardZipValue);
+    if (creditCardZipValue !== validateZipUsingRegEx) {
         creditCardZipListener();
     } else {
         $(creditCardZip).css('border', '0px');
@@ -87,7 +92,10 @@ creditCardZip.blur(() => {
 creditCardCvv.blur(() => {
     //check value of input on blur (not on page load)
     const creditCardCvvValue = $(creditCardCvv).val();
-    if (creditCardCvvValue == '') {
+    const cvvRegEx = /^[0-9]{3}$/;
+    const validateCvvUsingRegEx = cvvRegEx.test(creditCardCvvValue);
+
+    if (creditCardCvvValue !== validateCvvUsingRegEx) {
         creditCardCvvListener();
     } else {
         $(creditCardCvv).css('border', '0px');
