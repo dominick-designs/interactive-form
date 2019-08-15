@@ -21,18 +21,26 @@ $('select#title').on('change', () => {
 
 
 /*****FORM VALIDATION*****/
-const cssError = { 'backgroundColor': 'red', 'color': 'white', 'text-transform': 'uppercase', 'font-size': '1.1em', 'border': '5px, solid, gray', 'padding': '10px 0px 10px 30px' };
 
+/** declare constants for name inputs */
+const cssError = { 'backgroundColor': 'red', 'color': 'white', 'text-transform': 'uppercase', 'font-size': '1.1em', 'border': '5px, solid, gray', 'padding': '10px 0px 10px 30px' };
 const nameInput = $('#name');
 const nameError = $(`<div> * Name must be 1 and 20 characters</div> <br/>`)
     .css(cssError)
     .hide()
     .insertAfter(nameInput);
-
-// validate name input on blur
 const nameInputValue = $(nameInput).val();
-function nameListener() {
-    //check value of input on form submit
+
+/** declare email input constants */
+const emailInput = $('#mail');
+const emailError = $('<div>* Email must be valid</div> <br/>')
+    .css(cssError)
+    .hide()
+    .insertAfter(emailInput);
+const emailInputValue = $(emailInput).val();
+
+/**validate name input */
+let nameListener = (() => {
     if (nameInputValue !== '') {
         $(nameInput).css('border', '0px');
         $(nameError).hide();
@@ -42,9 +50,8 @@ function nameListener() {
         $(nameError).show();
         return false;
     }
-}
-
-//check value of input on blur (not on page load)
+});
+//check value of name input on blur (not on page load)
 nameInput.blur(() => {
     const nameInputValue = $(nameInput).val();
     if (nameInputValue == '') {
@@ -55,19 +62,10 @@ nameInput.blur(() => {
     }
 });
 
-// email validation
-const emailInput = $('#mail');
-const emailError = $('<div>* Email must be valid</div> <br/>')
-    .css(cssError)
-    .hide()
-    .insertAfter(emailInput);
-const emailInputValue = $(emailInput).val();
-function emailListener() {
+/** validate email input */
+let emailListener = (() => {
     console.log('email = listerner here');
-
-    //check value of input on form submit
     // Regex source: https://stackoverflow.com/questions/4964691/super-simple-email-validation-with-javascript
-
     const emailRegEx = /(.+)@(.+){2,}\.(.+){2,}/;
     const validateUsingRegEx = emailRegEx.test(emailInputValue);
     if (emailInputValue !== '') {
@@ -79,12 +77,10 @@ function emailListener() {
         $(emailError).show();
         return false;
     }
-
-}
-
+});
 //check value of input on blur (not on page load)
 emailInput.blur(() => {
-    const emailInputValue = $(emailInput).val();
+    //const emailInputValue = $(emailInput).val();
     if (emailInputValue == '') {
         emailListener();
     } else {
