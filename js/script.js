@@ -100,15 +100,19 @@ $('form').on("submit", function (event) {
     if (emailInputValue === '') {
         event.preventDefault();
     }
+
+
     if (nameInputValue == "") {
         event.preventDefault();
+    } else {
+        nameListener();
     }
     if (creditCardNumberValue || creditCardZipValue || creditCardCvvValue == "") {
         event.preventDefault();
     }
 
     emailListener();
-    nameListener();
+
     activityListener();
     creditCardListener();
     creditCardZipListener();
