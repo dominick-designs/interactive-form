@@ -22,7 +22,7 @@ $('select#payment').on('change', () => {
     let selectedPaymentMethod = $('select#payment').val();
     /*Get the value of the payment select element, if it is equal to ‘credit card’, set the credit card payment section in the form to show, and set the other two options to hide.*/
     switch (selectedPaymentMethod) {
-        case 'credit card':
+        case 'credit_card':
             $(creditCardOption).show();
             $(paypalSibling).hide();
             $(bitCoinSibling).hide();

@@ -20,16 +20,36 @@ $('select#title').on('change', () => {
 })
 
 
-// event listener to handle event functions
+/** event listener to handle on submit event functions*/
 $('form').on("submit", function (event) {
-    if (nameInputValue || emailInputValue || creditCardNumberValue || creditCardZipValue || creditCardCvvValue === "") {
+    if (selectedPaymentMethod !== 'credit_card' && nameListener() === false) {
         event.preventDefault();
     }
-
-    nameListener();
-    emailListener();
-    activityListener();
+    if (selectedPaymentMethod !== 'credit_card' && emailListener() === false) {
+        event.preventDefault();
+    }
+    if (selectedPaymentMethod !== 'credit_card' && activityListener() === false) {
+        event.preventDefault();
+    }
+    /**if credit card is not selected */
+    if (selectedPaymentMethod === 'credit_card' && creditCardNumberValue === '') {
+        event.preventDefault();
+    }
+    if (selectedPaymentMethod === 'credit_card' && creditCardZipValue === '') {
+        event.preventDefault();
+    }
+    if (selectedPaymentMethod === 'credit_card' && creditCardCvvValue === '') {
+        event.preventDefault();
+    }
     creditCardListener();
-    creditCardZipListener();
     creditCardCvvListener();
+    creditCardCvvListener();
+
 });
+
+
+
+
+
+
+
