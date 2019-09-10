@@ -1,12 +1,18 @@
-# interactive-form-v1
+# Interactive Form
 
-## Project Summary
+* [view live demo here](https://dominick-designs.github.io/interactive-form-v1/)
 
-* This is project # 3 of the [team treehouse course](https://teamtreehouse.com/projects/interactive-form)
-* Project includes jQuery
-* Project must meet minimum requirements in order to receive a "meets expectations" grade
+* An interactive form
+* Uses regex to validate form fields
 
-## See live github pages demo here:
-https://dominick-designs.github.io/interactive-form-v1/
+## Technologies used
+* JavaScript
+* jQuery
+* HTML
+* CSS
 
+## Known issues
+* Error messages can be more user-friendly
 
+## Roadmap
+* Post data from form to database
