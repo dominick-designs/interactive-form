@@ -1,6 +1,6 @@
 # Interactive Form
 
-* [view live demo here](https://dominick-designs.github.io/interactive-form-v1/)
+* [view live demo here](https://interactive-jquery-form.dominickdesigns.space/)
 
 * An interactive form
 * Uses regex to validate form fields
